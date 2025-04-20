@@ -1,12 +1,12 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 import MenuSection from '@/components/MenuSection';
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
-  const { toast } = useToast();
+  const { toast: useToastHook } = useToast();
   const [name, setName] = useState("");
 
   const [beverages] = useState([
@@ -50,7 +50,7 @@ const Index = () => {
 
   const submitOrder = () => {
     if (!name) {
-      toast({
+      useToastHook({
         title: "Errore",
         description: "Per favore inserisci il tuo nome.",
         variant: "destructive"
@@ -78,6 +78,26 @@ const Index = () => {
     const encodedOrder = encodeURIComponent(orderText);
     const whatsappNumber = "+393200662447"; // Updated WhatsApp number
     window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedOrder}`;
+  };
+
+  const [reservationLink, setReservationLink] = useState<string | null>(null);
+
+  const generateReservationLink = () => {
+    if (!name) {
+      toast.error("Per favore, inserisci il tuo nome prima di generare il link.");
+      return;
+    }
+
+    // Genera un link univoco con il nome dell'ospite e una data casuale
+    const uniqueId = Math.random().toString(36).substring(7);
+    const link = `${window.location.origin}/reservation/${uniqueId}?guest=${encodeURIComponent(name)}`;
+    
+    setReservationLink(link);
+    
+    // Copia automaticamente il link negli appunti
+    navigator.clipboard.writeText(link).then(() => {
+      toast.success("Link di prenotazione copiato!");
+    });
   };
 
   return (
@@ -127,13 +147,30 @@ const Index = () => {
           onIncrease={(index) => updateQuantity(savoryItems, setSavoryItems, index, true)}
           onDecrease={(index) => updateQuantity(savoryItems, setSavoryItems, index, false)}
         />
+        
+        <div className="mt-4 flex space-x-2">
+          <Button 
+            onClick={submitOrder}
+            className="flex-1 bg-[#4CAF50] hover:bg-[#45a049] text-white py-4 text-lg transition-all duration-300 transform hover:scale-105"
+          >
+            Salva ordine
+          </Button>
+          <Button 
+            onClick={generateReservationLink}
+            variant="secondary"
+            className="flex-1 bg-[#b30000] text-white hover:bg-[#900000] py-4 text-lg transition-all duration-300 transform hover:scale-105"
+          >
+            Genera Link Prenotazione
+          </Button>
+        </div>
 
-        <Button 
-          onClick={submitOrder}
-          className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white py-4 text-lg mt-8 transition-all duration-300 transform hover:scale-105"
-        >
-          Salva ordine
-        </Button>
+        {reservationLink && (
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+            <p className="text-sm text-blue-700 break-words">
+              Link Prenotazione: {reservationLink}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
