@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MenuSection from '@/components/MenuSection';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const { toast } = useToast();
@@ -76,20 +76,22 @@ const Index = () => {
     addItemsToOrder(savoryItems, "Salati");
 
     const encodedOrder = encodeURIComponent(orderText);
-    const whatsappNumber = "+39XXXXXXXXXX"; // Replace with actual WhatsApp number
+    const whatsappNumber = "+393200662447"; // Updated WhatsApp number
     window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedOrder}`;
   };
 
   return (
     <div className="min-h-screen bg-[#fffaf7] px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold text-[#b30000] text-center mb-6">Menù Colazione</h1>
+      <div className="max-w-2xl mx-auto animate-fade-in">
+        <h1 className="text-4xl font-bold text-[#b30000] text-center mb-6 hover:scale-105 transition-transform duration-300">
+          Menù Colazione
+        </h1>
         
-        <p className="text-center text-gray-600 italic mb-8">
+        <p className="text-center text-gray-600 italic mb-8 animate-fade-in">
           Il cibo e le bevande della colazione vanno consumati presso la struttura. Non è consentito l'asporto.
         </p>
 
-        <div className="mb-8">
+        <div className="mb-8 animate-fade-in">
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
             Inserisci il tuo nome:
           </label>
@@ -98,7 +100,7 @@ const Index = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Nome e cognome"
-            className="w-full"
+            className="w-full transition-all duration-300 hover:border-[#b30000] focus:ring-[#b30000]"
           />
         </div>
 
@@ -128,7 +130,7 @@ const Index = () => {
 
         <Button 
           onClick={submitOrder}
-          className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white py-4 text-lg mt-8"
+          className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white py-4 text-lg mt-8 transition-all duration-300 transform hover:scale-105"
         >
           Salva ordine
         </Button>
